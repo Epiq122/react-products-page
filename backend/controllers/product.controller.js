@@ -51,11 +51,18 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
+
+  if (!product.name || !product.price || !product.image) {
+    return res
+      .status(400)
+      .send({ success: false, message: 'Please fill all fields' });
+  }
+
   try {
     await Product.findByIdAndDelete(id);
     res.send({ success: true, message: 'Product deleted successfully' });
   } catch (error) {
     console.log('error in deleting product:', error.message);
-    res.status(404).send({ success: false, message: 'Product not found' });
+    res.status(500).send({ success: false, message: 'Server Error' });
   }
 };
